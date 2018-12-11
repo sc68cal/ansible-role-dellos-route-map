@@ -7,22 +7,12 @@ dellos_route_map:
       regex: www
       state: present
   community_list:
-    - type: expanded
-      name: qq
-      permit: true
-      regex: aaa
-      state: present
     - type: standard
       name: qqq
       permit: false
       community: internet
       state: present
   extcommunity_list:
-    - type: expanded
-      name: qq
-      permit: true
-      regex: aaa
-      state: present
     - type: standard
       name: qqq
       permit: false
