@@ -11,22 +11,12 @@ dellos_route_map:
       regex: www
       state: present
   community_list:
-    - type: expanded
-      name: qq
-      permit: true
-      regex: aaa
-      state: present
     - type: standard
       name: qqq
       permit: false
       community: internet
       state: present
   extcommunity_list:
-    - type: expanded
-      name: qq
-      permit: true
-      regex: aaa
-      state: present
     - type: standard
       name: qqq
       permit: false
@@ -253,32 +243,20 @@ no ip as-path access-list {{ item.access_list }}
             {% endif %}
             {% if item.regex is defined and item.regex %}
               {% if item.state is defined and item.state == "absent" %}
-                {% if item.type != "expanded" %}
-no ip community-list {{ item.type }} {{ item.name }} {{ filter }} {{ item.regex }}
-                {% else %}
-no ip community-list standard {{ item.name }}
-                {% endif %}
+no ip community-list standard {{ item.name }} {{ filter }} {{ item.regex }}
               {% else %}
-ip community-list {{ item.type }} {{ item.name }} {{ filter }} {{ item.regex }}
+ip community-list standard {{ item.name }} {{ filter }} {{ item.regex }}
               {% endif %}
             {% elif item.community is defined and item.community %}
               {% if item.state is defined and item.state == "absent" %}
-                {% if item.type != "expanded" %}
-no ip community-list {{ item.type }} {{ item.name }} {{ filter }} {{ item.community }}
-                {% else %}
-no ip community-list standard {{ item.name }}
-                {% endif %}
+no ip community-list standard {{ item.name }} {{ filter }} {{ item.community }}
               {% else %}
 ip community-list {{ item.type }} {{ item.name }} {{ filter }} {{ item.community }}
               {% endif %}
             {% endif %}
           {% else %}
             {% if item.state is defined and item.state == "absent" %}
-                {% if item.type != "expanded" %}
-no ip community-list {{ item.type }} {{ item.name }}
-                {% else %}
 no ip community-list standard {{ item.name }}
-                {% endif %}
             {% endif %}
           {% endif %}
         {% endif %}
@@ -296,38 +274,25 @@ no ip community-list standard {{ item.name }}
             {% endif %}
             {% if item.regex is defined and item.regex %}
               {% if item.state is defined and item.state == "absent" %}
-                {% if item.type != "expanded" %}
-no ip extcommunity-list {{ item.type }} {{ item.name }} {{ filter }} {{ item.regex }}
-                {% else %}
-no ip extcommunity-list standard {{ item.name }}
-                {% endif %}
+no ip extcommunity-list standard {{ item.name }} {{ filter }} {{ item.regex }}
               {% else %}
-ip extcommunity-list {{ item.type }} {{ item.name }} {{ filter }} {{ item.regex }}
+ip extcommunity-list standard {{ item.name }} {{ filter }} {{ item.regex }}
               {% endif %}
             {% elif item.community is defined and item.community %}
               {% if item.state is defined and item.state == "absent" %}
-                {% if item.type != "expanded" %}
-no ip extcommunity-list {{ item.type }} {{ item.name }} {{ filter }} {{ item.community }}
-                {% else %}
-no ip extcommunity-list standard {{ item.name }}
-                {% endif %}
+no ip extcommunity-list standard {{ item.name }} {{ filter }} {{ item.community }}
               {% else %}
 ip extcommunity-list {{ item.type }} {{ item.name }} {{ filter }} {{ item.community }}
               {% endif %}
             {% endif %}
           {% else %}
             {% if item.state is defined and item.state == "absent" %}
-                {% if item.type != "expanded" %}
-no ip extcommunity-list {{ item.type }} {{ item.name }}
-                {% else %}
 no ip extcommunity-list standard {{ item.name }}
-                {% endif %}
             {% endif %}
           {% endif %}
         {% endif %}
       {% endif %}
     {% endfor %}
-
   {% endif %}
 {% endfor %}
 {% endif %}
