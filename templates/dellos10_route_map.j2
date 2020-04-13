@@ -292,3 +292,39 @@ no ip extcommunity-list standard {{ item.name }}
   {% endif %}
 {% endfor %}
 {% endif %}
+{% if rpol.prefix_list is defined and rpol.prefix_list %}
+  {% for list in rpol.prefix_list %}
+    {% for prefix in list.prefix %}
+ip prefix-list {{ list.name }} {{ prefix.action }} {{ prefix.range }}
+    {% endfor %}
+!
+  {% endfor %}
+{% endif %}
+{% if rpol.as_path is defined and rpol.as_path %}
+  {% for aspath in rpol.as_path %}
+    {% for path in aspath %}
+ip as-path access-list {{ aspath.name }} permit {{ path }}
+    {% endfor %}
+!
+  {% endfor %}
+{% endif %}
+{% if rpol.route_map is defined and rpol.route_map %}
+  {% for rmap in rpol.route_map %}
+no route-map {{ rmap.name }}
+    {% set p_seq = 10 -%}
+    {% if rmap.match is defined and rmap.match %}
+      {% for match in rmap.match %}
+route-map {{ rmap.name }} permit {{ p_seq }}
+        {% if match.type %}
+match {{ match.type }} {{ match.object }}
+        {% endif %}
+        {% if match.action %}
+set {{ match.action.type }} {{ match.action.object }}
+        {% endif %}
+!
+        {% set p_seq = p_seq + rmap.step -%}
+      {% endfor %}
+    {% endif %}
+  {% endfor %}
+{% endif %}
+!
